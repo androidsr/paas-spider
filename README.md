@@ -1,19 +1,62 @@
-# README
+# Web自动化工具
 
-## About
+## 概述
 
-This is the official Wails Vue template.
+这是一款基于规则驱动的Web自动化工具，支持通过配置规则实现浏览器操作和网络数据爬取功能。用户可以通过定义最小操作单元、组装规则配置、执行操作流程，并实时记录爬取数据。工具采用wails + go + vue + antd框架开发，提供高效的自动化解决方案。
 
-You can configure the project by editing `wails.json`. More information about the project settings can be found
-here: https://wails.io/docs/reference/project-config
+## 功能介绍
 
-## Live Development
+### 1. 操作配置
 
-To run in live development mode, run `wails dev` in the project directory. This will run a Vite development
-server that will provide very fast hot reload of your frontend changes. If you want to develop in a browser
-and have access to your Go methods, there is also a dev server that runs on http://localhost:34115. Connect
-to this in your browser, and you can call your Go code from devtools.
+操作配置是自动化工具的核心功能，允许用户定义最小的操作单元。用户可以通过配置操作步骤，将复杂操作分解为简单的步骤组合。
 
-## Building
+### 2. 规则配置
 
-To build a redistributable, production mode package, use `wails build`.
+规则配置允许用户将多个操作配置进行组装，形成完整的自动化流程。
+
+### 3. 执行操作
+
+执行操作即根据规则配置执行自动化流程。用户可以选择单次执行或循环执行，并可设置执行时间间隔。
+
+### 4. 数据中心
+
+数据中心提供爬取数据记录功能，用户可以查看历史执行记录、爬取结果及日志信息。
+
+### 5. 设置
+
+设置功能提供执行过程中的配置参数，包括：
+- 浏览器位置：指定浏览器可执行文件路径
+- 是否有头浏览器：配置浏览器是否显示界面
+- 页面等待时间：设置页面加载超时时间
+- 执行时间间隔：设置自动化任务的间隔时间
+
+## 技术栈
+
+- **前端**：Vue.js + Ant Design Vue
+- **后端**：Go
+- **桌面端**：Wails
+- **数据持久化**：SQLite
+- **网络请求**：Chrome DevTools Protocol
+
+## 安装与使用
+
+1. 下载对应平台的执行文件
+
+## 常见问题
+
+1. **浏览器无法启动**  
+   检查浏览器路径是否正确，确保浏览器可执行文件存在。
+
+2. **页面加载超时**  
+   调整页面等待时间，确保页面加载时间足够。
+
+3. **数据爬取失败**  
+   检查网络连接，确保目标页面可访问。
+
+## 联系方式
+
+如有问题，请联系：[srandroid@163.com] 微信号：[scrqrr]
+
+---
+
+感谢使用本工具！希望它能为您的自动化工作带来便利！
