@@ -15,9 +15,9 @@ import (
 var assets embed.FS
 
 func main() {
-	if !toolkit.Signature("10-F6-0A-AD-A3-81,04-42-1A-D7-FE-8B", "2025-03-01") {
+	/* if !toolkit.Signature("10-F6-0A-AD-A3-81,04-42-1A-D7-FE-8B", "2025-03-01") {
 		return
-	}
+	} */
 	httpClient := toolkit.NewHttpClient("http://localhost:8080")
 	taskBiz := biz.NewTaskBiz()
 	recordBiz := biz.NewRecordBiz()
