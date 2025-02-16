@@ -9,20 +9,25 @@
 ### 1. 操作配置
 
 操作配置是自动化工具的核心功能，允许用户定义最小的操作单元。用户可以通过配置操作步骤，将复杂操作分解为简单的步骤组合。
+![image](https://github.com/user-attachments/assets/93fff308-d02b-47ab-aabd-7854c819ff8d)
+![image](https://github.com/user-attachments/assets/99db6e02-bf97-4651-9617-0ccfcb5afcfc)
 
 ### 2. 规则配置
 
 规则配置允许用户将多个操作配置进行组装，形成完整的自动化流程。
+![image](https://github.com/user-attachments/assets/f089f8e0-2249-4461-811e-f4ccdb3030da)
 
 ### 3. 执行操作
 
 执行操作即根据规则配置执行自动化流程。用户可以选择单次执行或循环执行，并可设置执行时间间隔。
+![image](https://github.com/user-attachments/assets/d133bf87-2b31-4023-b336-abf7aa50a072)
 
 ### 4. 数据中心
 
 数据中心提供爬取数据记录功能，用户可以查看历史执行记录、爬取结果及日志信息。
 
 ### 5. 设置
+![image](https://github.com/user-attachments/assets/7fa7c9e7-83d0-4ba4-b081-25cc08299215)
 
 设置功能提供执行过程中的配置参数，包括：
 - 浏览器位置：指定浏览器可执行文件路径
