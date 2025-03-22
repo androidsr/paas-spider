@@ -26,8 +26,8 @@ func main() {
 
 	err := wails.Run(&options.App{
 		Title:  "Web自动化工具",
-		Width:  1200,
-		Height: 900,
+		Width:  1100,
+		Height: 700,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},

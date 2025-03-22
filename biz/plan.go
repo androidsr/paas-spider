@@ -91,8 +91,8 @@ func (m *PlanBiz) GetList() model.HttpResult {
 }
 
 func (m *PlanBiz) GetGroupList() model.HttpResult {
-	sql := `select DISTINCT exec_remark from plan a where 1=1 `
-	data := make([]string, 0)
+	sql := `select DISTINCT exec_remark as label ,exec_remark as value from plan a where 1=1 `
+	data := make([]model.SelectVO, 0)
 	b := sbuilder.Builder(sql)
 	sql, values := b.Build()
 	err := m.db.SelectSQL(&data, sql, values...)

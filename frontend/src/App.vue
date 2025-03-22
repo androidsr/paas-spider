@@ -14,8 +14,10 @@
     },
   }">
     <a-layout>
-      <a-layout-sider :style="{ minHeight: '100vh' }">
-        <a-menu mode="inline" @click="menuClick" theme="dark" :selectedKeys="[selectedKey]" v-show="$store.isAbout">
+      <a-layout-sider :style="{ minHeight: '100vh' }" :trigger="null" :collapsed="true" :collapsible="true"
+        :collapsedWidth="40" theme="light">
+        <a-menu :style="{ minHeight: '100vh' }" mode="inline" @click="menuClick" theme="light"
+        :selectedKeys="[selectedKey]" v-show="$store.isAbout">
           <a-menu-item key="/taskList">
             <HomeOutlined />&nbsp;&nbsp;操作配置
           </a-menu-item>

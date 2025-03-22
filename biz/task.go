@@ -109,8 +109,8 @@ func (m *TaskBiz) GetList() model.HttpResult {
 }
 
 func (m *TaskBiz) GetSystemList() model.HttpResult {
-	sql := `select DISTINCT system from task a where 1=1 `
-	data := make([]string, 0)
+	sql := `select DISTINCT system as label,system as value from task a where 1=1 `
+	data := make([]model.SelectVO, 0)
 	b := sbuilder.Builder(sql)
 	sql, values := b.Build()
 	err := m.db.SelectSQL(&data, sql, values...)
