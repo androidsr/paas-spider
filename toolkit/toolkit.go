@@ -4,11 +4,15 @@ import (
 	"bytes"
 	"fmt"
 	"log"
+	"os"
+	"path"
 	"strings"
+	"time"
 	"unicode/utf8"
 
-	"github.com/ledongthuc/pdf"
+	"github.com/androidsr/sc-go/sno"
 	"github.com/playwright-community/playwright-go"
+	"rsc.io/pdf"
 )
 
 // PageToolkit 封装的网页操作工具
@@ -400,23 +404,54 @@ func (p *PageToolkit) GetLinkContent(selector string, elementType string) (map[s
 			return nil, fmt.Errorf("打开链接 %v 时出错: %v", link, err)
 		}
 
-		err = p.Page.Locator(selector).First().WaitFor(playwright.LocatorWaitForOptions{Timeout: p.timeout})
-		if err != nil {
-			fmt.Printf("等待页面加载超时：%v", err)
-			continue
-		}
-		if elementType == "text" {
-			text, err := p.GetTextContent(selector)
+		if selector == "" {
+			readabilityCode, err := os.ReadFile("./toolkit/Readability.js")
 			if err != nil {
-				return nil, fmt.Errorf("获取子页面链接时出错: %v", err)
+				fmt.Printf("加载JS失败：%v", err)
+				continue
 			}
-			result[name] = text
+			_, err = p.Page.Evaluate(string(readabilityCode))
+			if err != nil {
+				fmt.Printf("注释JS失败：%v", err)
+				continue
+			}
+
+			// 注入并运行提取逻辑（Readability 默认需要 document 克隆）
+			content, err := p.Page.Evaluate(`() => {
+				try {
+					const article = new Readability(document.cloneNode(true)).parse();
+					return article?.content || '未提取到内容';
+				} catch (e) {
+					return 'Readability 提取失败: ' + e.toString();
+				}
+			}`)
+
+			if err != nil {
+				fmt.Printf("自动获取文本内容失败：%v", err)
+				continue
+			}
+			contentPdf := p.contentToPdf(content.(string))
+			result[name] = contentPdf
+			time.Sleep(time.Second * 3)
 		} else {
-			childLinks, err := p.getRecursiveElementsSources(p.Page.Locator(selector).First(), elementType)
+			err = p.Page.Locator(selector).First().WaitFor(playwright.LocatorWaitForOptions{Timeout: p.timeout})
 			if err != nil {
-				return nil, fmt.Errorf("获取子页面链接时出错: %v", err)
+				fmt.Printf("等待页面加载超时：%v", err)
+				continue
 			}
-			result[name] = childLinks
+			if elementType == "text" {
+				text, err := p.GetTextContent(selector)
+				if err != nil {
+					return nil, fmt.Errorf("获取子页面链接时出错: %v", err)
+				}
+				result[name] = text
+			} else {
+				childLinks, err := p.getRecursiveElementsSources(p.Page.Locator(selector).First(), elementType)
+				if err != nil {
+					return nil, fmt.Errorf("获取子页面链接时出错: %v", err)
+				}
+				result[name] = childLinks
+			}
 		}
 	}
 	p.links = nil
@@ -540,27 +575,31 @@ func (a *PageToolkit) RunScript(script string) {
 	if err != nil {
 	}
 }
-
-// html转换pdf
 func (a *PageToolkit) htmlToPdf(locator playwright.Locator) string {
 	html, err := locator.InnerHTML()
 	if err != nil {
 		log.Printf("创建PDF页面失败: %v\n", err)
 		return ""
 	}
+	return a.contentToPdf(html)
+}
+
+// html转换pdf
+func (a *PageToolkit) contentToPdf(html string) string {
 	newPage, err := a.Browser.NewPage()
 	if err != nil {
 		log.Fatalf("创建PDF页面失败: %v\n", err)
 		return ""
 	}
 	newPage.SetContent(html)
-	//savePath := "temp/" + time.Now().Format("2006-01-02")
-	//os.MkdirAll(savePath, 0666)
+	savePath := "temp/" + time.Now().Format("2006-01-02")
+	os.MkdirAll(savePath, 0666)
+
 	options := playwright.PagePdfOptions{
-		//Path:                playwright.String(path.Join(savePath, sno.GetString()+".pdf")), // 保存 PDF 文件
-		Format:              playwright.String("A4"), // 页面格式
-		DisplayHeaderFooter: playwright.Bool(false),  // 显示页眉和页脚
-		PrintBackground:     playwright.Bool(false),  // 打印背景
+		Path:                playwright.String(path.Join(savePath, sno.GetString()+".pdf")), // 保存 PDF 文件
+		Format:              playwright.String("A4"),                                        // 页面格式
+		DisplayHeaderFooter: playwright.Bool(false),                                         // 显示页眉和页脚
+		PrintBackground:     playwright.Bool(false),                                         // 打印背景
 	}
 	data, err := newPage.PDF(options)
 	if err != nil {
@@ -573,6 +612,7 @@ func (a *PageToolkit) htmlToPdf(locator playwright.Locator) string {
 		return ""
 	}
 	newPage.Close()
+	fmt.Println("PDF文件已生成:    ", savePath)
 	return result
 }
 

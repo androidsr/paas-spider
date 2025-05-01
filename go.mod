@@ -4,9 +4,9 @@ go 1.23.2
 
 require (
 	github.com/androidsr/sc-go v0.0.0-20250111150447-f1b36d257ac7
-	github.com/ledongthuc/pdf v0.0.0-20240201131950-da5b75280b06
 	github.com/playwright-community/playwright-go v0.4901.0
 	github.com/wailsapp/wails/v2 v2.9.3
+	rsc.io/pdf v0.1.1
 )
 
 require (
